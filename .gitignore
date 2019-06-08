@@ -1,0 +1,5 @@
+# User-specific stuff
+/.idea/*
+/__pycache__/*
+/pickles/*
+/weights/*
