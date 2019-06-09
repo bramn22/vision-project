@@ -31,10 +31,10 @@ class AutoEncoder:
     def build_model(self):
         self.model.summary()
         self.model.compile(optimizer='adam',
-                           loss='mse')
+                           loss='mse', metrics=['mse'])
 
-    def train(self, x, epochs=1000):
-        self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=32)
+    def train(self, x, epochs=1000, batch_size=32):
+        return self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=batch_size)
 
     def predict(self, x):
         return self.model.predict(x)

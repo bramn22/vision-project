@@ -89,7 +89,7 @@ utils.disp_images(x_train[-5:], y_train[-5:], title="disp", cmap='gray')
 
 x_val, y_val = build_classification_dataset(val_files, gray=True)
 print('%i validation images from %i classes' %(x_val.shape[0],  y_train.shape[1]))
-pickle.dump({"x_train": x_train, "y_train": y_train, "x_val": x_val, "y_val": y_val}, open("classification_gray.p", "wb"))
+pickle.dump({"x_train": x_train, "y_train": y_train, "x_val": x_val, "y_val": y_val}, open(r"pickles/classification_gray.p", "wb"))
 print('Pickle file saved')
 
 
@@ -100,12 +100,12 @@ train_files = [os.path.join(classes_folder, c_f) for c_f in classes_files if 'tr
 val_files = [os.path.join(classes_folder, c_f) for c_f in classes_files if 'val.txt' in c_f]
 
 x_train, y_train = build_segmentation_dataset(train_files)
-print('%i training images with shapes: ' %(x_train.shape, y_train.shape))
+print('{} training images with shapes: {}'.format(x_train.shape[0], x_train.shape))
 utils.disp_images(np.concatenate([x_train[-5:], y_train[-5:]]), title="disp", cols=5)
 
 x_val, y_val = build_segmentation_dataset(val_files)
-print('%i training images with shapes: ' %(x_train.shape, y_train.shape))
-pickle.dump({"x_train": x_train, "y_train": y_train, "x_val": x_val, "y_val": y_val}, open("segmentation.p", "wb"))
+print('{} validation images with shapes: {}'.format(x_val.shape[0], y_val.shape))
+pickle.dump({"x_train": x_train, "y_train": y_train, "x_val": x_val, "y_val": y_val}, open(r"pickles/segmentation.p", "wb"))
 print('Pickle file saved')
 
 

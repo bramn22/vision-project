@@ -19,24 +19,33 @@ def denormalize_data(data, mean, std):
     data_raw = data_reshaped*std + mean
     return np.reshape(data_raw, shape)
 
+def onehots_2_labels(vecs, labels):
+    indices = np.argmax(vecs, axis=1)
+    return [labels[i] for i in indices]
+
+def plot_2dims(vecs, labels):
+    import seaborn as sns
+    import matplotlib.cm as cm
+    sns.set()
+    colors = cm.rainbow(np.linspace(0, 1, len(labels)))
+
+    plt.scatter(vecs[:, 0], vecs[:, 1], c=colors)
+    # plt.legend(labels=label_txts, loc='lower left')
+    plt.show()
+
 def plot_tsne(dim, vecs, labels):
     import seaborn as sns
     import matplotlib.cm as cm
     from sklearn.manifold import TSNE
-
+    sns.set()
 
     tsne_results = TSNE(n_components=dim, verbose=1).fit_transform(vecs)
 
-    # colors = [int(l % 23) for l in labels]
     colors = cm.rainbow(np.linspace(0, 1, len(labels)))
 
-    plt.scatter(tsne_results[:, 0], tsne_results[:, 1], c=colors, label=labels)
-    plt.legend(loc='lower left')
+    plt.scatter(tsne_results[:, 0], tsne_results[:, 1], c=colors)
+    # plt.legend(loc='lower left')
     plt.show()
-
-    # tsne_results.append()
-    # facet = sns.lmplot(data=tsne_results, x='x', y='y', hue='label',
-    #                    fit_reg=False, legend=True, legend_out=True)
 
 def disp_images(imgs, txts=None, cols=10, title='', cmap=None):
     if txts is None:
@@ -57,3 +66,4 @@ def disp_images(imgs, txts=None, cols=10, title='', cmap=None):
             axarr[i // cols][i % cols].set_title(txt)
         f.suptitle(title, fontsize=16)
         plt.show()
+
