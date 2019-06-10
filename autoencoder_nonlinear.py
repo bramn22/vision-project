@@ -32,13 +32,13 @@ class AutoEncoder:
         self.output = Reshape(input_shape)(decoder)
         self.model = Model(inputs=self.input, outputs=self.output)
 
-    def build_model(self):
+    def build_model(self, lr=0.001):
         self.model.summary()
         self.model.compile(optimizer='adam',
-                           loss='mse', metrics=['mse'])
+                           loss='mse', metrics=['mse'], lr=lr)
 
-    def train(self, x, epochs=1000, batch_size=32, lr=0.001):
-        return self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=batch_size, lr=lr)
+    def train(self, x, epochs=1000, batch_size=32):
+        return self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=batch_size)
 
     def predict(self, x):
         return self.model.predict(x)
