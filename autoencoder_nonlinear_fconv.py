@@ -14,7 +14,7 @@ class AutoEncoder:
 
         # encoder = MaxPool2D((2, 2), padding='same')(encoder)  #(64,64,8)
 
-        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
+        # encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
         encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
         encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
 
@@ -29,7 +29,7 @@ class AutoEncoder:
         # decoder = Reshape((16, 16, 16))(code)  #(64,64,16)
         decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='elu', padding='same')(code)  #(128,128,8)
         decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)
-        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)
+        # decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)
         decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
         decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
         decoder = Conv2DTranspose(1, (4, 4), strides=2, activation='linear', padding='same')(decoder)  #(256,256,1)
