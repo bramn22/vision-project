@@ -5,7 +5,7 @@ from keras import optimizers
 
 class AutoEncoder:
 
-    def __init__(self, input_shape, pcs):
+    def __init__(self, input_shape, last_activation='linear'):
         self.input = Input(shape=input_shape)
 
         encoder = Reshape((*input_shape, 1))(self.input)  #(256,256,1)
@@ -32,7 +32,7 @@ class AutoEncoder:
         # decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)
         decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
         decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
-        decoder = Conv2DTranspose(1, (4, 4), strides=2, activation='linear', padding='same')(decoder)  #(256,256,1)
+        decoder = Conv2DTranspose(1, (4, 4), strides=2, activation=last_activation, padding='same')(decoder)  #(256,256,1)
 
         self.output = Reshape(input_shape)(decoder)
         self.model = Model(inputs=self.input, outputs=self.output)
