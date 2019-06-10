@@ -9,17 +9,17 @@ class AutoEncoder:
         self.input = Input(shape=input_shape)
 
         encoder = Reshape((*input_shape, 1))(self.input)  #(256,256,1)
-        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(128,128,8)
-        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(128,128,8)
+        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='tanh', padding='same')(encoder)  #(128,128,8)
+        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='tanh', padding='same')(encoder)  #(128,128,8)
 
         # encoder = MaxPool2D((2, 2), padding='same')(encoder)  #(64,64,8)
 
-        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
-        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
-        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
+        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='tanh', padding='same')(encoder)
+        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='tanh', padding='same')(encoder)  #(32,32,8)
+        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='tanh', padding='same')(encoder)  #(32,32,8)
 
         # encoder = MaxPool2D((2, 2), padding='same')(encoder)  #(16,16,16)
-        code = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
+        code = Conv2D(16, (5, 5), strides=(2, 2), activation='linear', padding='same')(encoder)
 
         # code = Flatten()(encoder)  #(4096)
         # code = Dense(pcs, name='code', activation='linear')(code)  #(pcs)
@@ -27,11 +27,11 @@ class AutoEncoder:
 
         # decoder = Dense(4096)(code)  #(65536)
         # decoder = Reshape((16, 16, 16))(code)  #(64,64,16)
-        decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='elu', padding='same')(code)  #(128,128,8)
-        decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)
-        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)
-        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
-        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
+        decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='tanh', padding='same')(code)  #(128,128,8)
+        decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='tanh', padding='same')(decoder)  # (128,128,8)
+        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='tanh', padding='same')(decoder)  # (128,128,8)
+        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='tanh', padding='same')(decoder)  #(128,128,8)
+        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='tanh', padding='same')(decoder)  #(128,128,8)
         decoder = Conv2DTranspose(1, (4, 4), strides=2, activation='linear', padding='same')(decoder)  #(256,256,1)
 
         self.output = Reshape(input_shape)(decoder)
