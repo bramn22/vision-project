@@ -12,22 +12,22 @@ class AutoEncoder:
         encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(128,128,8)
         # encoder = MaxPool2D((2, 2), padding='same')(encoder)  #(64,64,8)
 
-        # encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
-        # encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
+        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
+        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
 
         # encoder = MaxPool2D((2, 2), padding='same')(encoder)  #(16,16,16)
         encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
 
         code = Flatten()(encoder)  #(4096)
-        code = Dense(pcs, name='code')(code)  #(pcs)
+        code = Dense(pcs, name='code', activation='linear')(code)  #(pcs)
         self.encoder = Model(inputs=self.input, outputs=code)
 
-        decoder = Dense(65536)(code)  #(65536)
-        decoder = Reshape((64, 64, 16))(decoder)  #(64,64,16)
-        # decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
-        # decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
+        decoder = Dense(4096)(code)  #(65536)
+        decoder = Reshape((16, 16, 16))(decoder)  #(64,64,16)
         decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
-        decoder = Conv2DTranspose(1, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(256,256,1)
+        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
+        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
+        decoder = Conv2DTranspose(1, (4, 4), strides=2, activation='linear', padding='same')(decoder)  #(256,256,1)
 
         self.output = Reshape(input_shape)(decoder)
         self.model = Model(inputs=self.input, outputs=self.output)
@@ -37,8 +37,8 @@ class AutoEncoder:
         self.model.compile(optimizer='adam',
                            loss='mse', metrics=['mse'])
 
-    def train(self, x, epochs=1000, batch_size=32):
-        return self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=batch_size)
+    def train(self, x, epochs=1000, batch_size=32, lr=0.001):
+        return self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=batch_size, lr=lr)
 
     def predict(self, x):
         return self.model.predict(x)

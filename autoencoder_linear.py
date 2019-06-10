@@ -22,8 +22,8 @@ class AutoEncoder:
         self.model.compile(optimizer='adam',
                            loss='mse', metrics=['mse'])
 
-    def train(self, x, epochs=1000, batch_size=32):
-        return self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=batch_size)
+    def train(self, x, epochs=1000, batch_size=32, lr=0.001):
+        return self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=batch_size, lr=lr)
 
     def predict(self, x):
         return self.model.predict(x)
