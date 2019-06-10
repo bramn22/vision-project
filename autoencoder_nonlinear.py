@@ -1,7 +1,7 @@
 import numpy as np
 from keras.models import Model
 from keras.layers import Input, Dense, Conv2D, Conv2DTranspose, Flatten, MaxPool2D, Reshape
-
+from keras import optimizers
 
 class AutoEncoder:
 
@@ -34,8 +34,9 @@ class AutoEncoder:
 
     def build_model(self, lr=0.001):
         self.model.summary()
-        self.model.compile(optimizer='adam',
-                           loss='mse', metrics=['mse'], lr=lr)
+        adam = optimizers.Adam(lr=lr)
+        self.model.compile(optimizer=adam,
+                           loss='mse', metrics=['mse'])
 
     def train(self, x, epochs=1000, batch_size=32):
         return self.model.fit(x, x, epochs=epochs, verbose=2, batch_size=batch_size)
