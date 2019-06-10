@@ -5,22 +5,22 @@ from keras import optimizers
 
 class AutoEncoder:
 
-    def __init__(self, input_shape, last_activation='linear'):
+    def __init__(self, input_shape, activations='elu', last_activation='linear'):
         self.input = Input(shape=input_shape)
 
         encoder = Reshape((*input_shape, 1))(self.input)  #(256,256,1)
-        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(128,128,8)
+        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation=activations, padding='same')(encoder)  #(128,128,8)
         encoder = BatchNormalization()(encoder)
-        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(128,128,8)
+        encoder = Conv2D(8, (5, 5), strides=(2, 2), activation=activations, padding='same')(encoder)  #(128,128,8)
         encoder = BatchNormalization()(encoder)
 
 
         # encoder = MaxPool2D((2, 2), padding='same')(encoder)  #(64,64,8)
 
         # encoder = Conv2D(8, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
-        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
+        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation=activations, padding='same')(encoder)  #(32,32,8)
         encoder = BatchNormalization()(encoder)
-        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
+        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation=activations, padding='same')(encoder)  #(32,32,8)
         encoder = BatchNormalization()(encoder)
 
         # encoder = MaxPool2D((2, 2), padding='same')(encoder)  #(16,16,16)
@@ -32,15 +32,15 @@ class AutoEncoder:
 
         # decoder = Dense(4096)(code)  #(65536)
         # decoder = Reshape((16, 16, 16))(code)  #(64,64,16)
-        decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='elu', padding='same')(code)  #(128,128,8)
+        decoder = Conv2DTranspose(16, (4, 4), strides=2, activation=activations, padding='same')(code)  #(128,128,8)
         decoder = BatchNormalization()(decoder)
-        decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)
+        decoder = Conv2DTranspose(16, (4, 4), strides=2, activation=activations, padding='same')(decoder)  # (128,128,8)
         decoder = BatchNormalization()(decoder)
 
         # decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)
-        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
+        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation=activations, padding='same')(decoder)  #(128,128,8)
         decoder = BatchNormalization()(decoder)
-        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
+        decoder = Conv2DTranspose(8, (4, 4), strides=2, activation=activations, padding='same')(decoder)  #(128,128,8)
         decoder = BatchNormalization()(decoder)
         decoder = Conv2DTranspose(1, (4, 4), strides=2, activation=last_activation, padding='same')(decoder)  #(256,256,1)
 
