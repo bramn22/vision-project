@@ -63,10 +63,10 @@ x_train_flat = np.reshape(x_train, (n, w*h))
 
 # Run non-linear AutoEncoder
 x_train_norm, train_mean, train_std = utils.normalize_data(x_train)
-ae = NonLinearAutoEncoder(input_shape=(w, h), pcs=1024)
+ae = NonLinearAutoEncoder(input_shape=(w, h))
 # ae.load_weights()
-ae.build_model()
-ae.train(x_train_norm, epochs=15)
+ae.build_model(lr=0.0003)
+ae.train(x_train_norm, epochs=100)
 ae.save_weights()
 result = ae.predict(x_train_norm[:5])
 result = utils.denormalize_data(result, train_mean, train_std)

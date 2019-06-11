@@ -1,5 +1,7 @@
 from keras.models import Model
 from keras.layers import Dense
+from keras import optimizers
+from keras.callbacks import EarlyStopping
 
 
 class Classifier:
@@ -16,16 +18,18 @@ class Classifier:
 
         self.model = Model(inputs=self.input, outputs=self.output)
 
-    def build_model(self):
+    def build_model(self, lr=0.001):
         self.model.summary()
-        self.model.compile(optimizer='adam',
+        adam = optimizers.Adam(lr=lr)
+        self.model.compile(optimizer=adam,
                            loss='categorical_crossentropy')
 
-    def train(self, x, y, epochs=1000):
-        self.model.fit(x, y, epochs=epochs, verbose=2, batch_size=32)
+    def train(self, x, y, epochs=1000, validation_split=0.1, patience=10):
+        earlystopping = EarlyStopping(patience=patience, restore_best_weights=True)
+        return self.model.fit(x, y, epochs=epochs, verbose=2, batch_size=32, validation_split=validation_split, callbacks=[earlystopping])
 
-    def save_weights(self):
-        self.model.save_weights('classifier.h5')
+    def save_weights(self, name='classifier.h5'):
+        self.model.save_weights(name)
 
-    def load_weights(self):
-        self.model.load_weights('classifier.h5')
+    def load_weights(self, name='classifier.h5'):
+        self.model.load_weights(name)

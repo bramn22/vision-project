@@ -44,11 +44,11 @@ class AutoEncoder:
     def predict(self, x):
         return self.model.predict(x)
 
-    def save_weights(self):
-        self.model.save_weights('autoencoder.h5')
+    def save_weights(self, name='autoencoder.h5'):
+        self.model.save_weights(name)
 
-    def load_weights(self):
-        self.model.load_weights('autoencoder.h5')
+    def load_weights(self, name='autoencoder.h5'):
+        self.model.load_weights(name)
 
     def extract_features(self, x):
         return self.encoder.predict(x)

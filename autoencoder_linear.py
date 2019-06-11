@@ -10,10 +10,8 @@ class AutoEncoder:
     def __init__(self, input_shape, pcs):
         dim = input_shape[0]
         self.input = Input(shape=input_shape)
-        # encoder = Dense(250)(input)
         code = Dense(pcs, activation='linear')(self.input)
         self.encoder = Model(inputs=self.input, outputs=code)
-        # decoder = Dense(250)(code)
         self.output = Dense(dim, activation='linear')(code)
         self.model = Model(inputs=self.input, outputs=self.output)
 
@@ -29,11 +27,11 @@ class AutoEncoder:
     def predict(self, x):
         return self.model.predict(x)
 
-    def save_weights(self):
-        self.model.save_weights('autoencoder_linear.h5')
+    def save_weights(self, name='autoencoder_linear.h5'):
+        self.model.save_weights(name)
 
-    def load_weights(self):
-        self.model.load_weights('autoencoder_linear.h5')
+    def load_weights(self, name='autoencoder_linear.h5'):
+        self.model.load_weights(name)
 
     def extract_features(self, x):
         return self.encoder.predict(x)
