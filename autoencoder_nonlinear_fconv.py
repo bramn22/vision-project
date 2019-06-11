@@ -15,8 +15,9 @@ class AutoEncoder:
         encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
 
         code = Conv2D(16, (5, 5), strides=(2, 2), activation='linear', padding='same')(encoder)
+        code_flat = Flatten()(code)  #(4096)
 
-        self.encoder = Model(inputs=self.input, outputs=code)
+        self.encoder = Model(inputs=self.input, outputs=code_flat)
 
         decoder = Conv2DTranspose(16, (dks, dks), strides=2, activation='elu', padding='same')(code)  #(128,128,8)
         decoder = Conv2DTranspose(16, (dks, dks), strides=2, activation='elu', padding='same')(decoder)  # (128,128,8)

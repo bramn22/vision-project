@@ -1,13 +1,13 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-def normalize_data(data_raw):
+def normalize_data(data_raw, mean=None, std=None):
     """ Expects data to have shape: (batch_size, ...) """
     shape = np.shape(data_raw)
     data_reshaped = np.reshape(data_raw, (shape[0], -1))
-
-    mean = np.mean(data_reshaped, axis=0)
-    std = np.std(data_reshaped, axis=0)
+    if mean is None or std is None:
+        mean = np.mean(data_reshaped, axis=0)
+        std = np.std(data_reshaped, axis=0)
     data = (data_reshaped - mean)/std
 
     return np.reshape(data, shape), mean, std
