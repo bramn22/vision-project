@@ -24,9 +24,9 @@ class Classifier:
         self.model.compile(optimizer=adam,
                            loss='categorical_crossentropy')
 
-    def train(self, x, y, epochs=1000, validation_split=0.1, patience=10):
+    def train(self, x, y, batch_size=32, epochs=1000, validation_split=0.1, patience=10):
         earlystopping = EarlyStopping(patience=patience, restore_best_weights=True)
-        return self.model.fit(x, y, epochs=epochs, verbose=2, batch_size=32, validation_split=validation_split, callbacks=[earlystopping])
+        return self.model.fit(x, y, epochs=epochs, verbose=2, batch_size=batch_size, validation_split=validation_split, callbacks=[earlystopping])
 
     def save_weights(self, name='classifier.h5'):
         self.model.save_weights(name)

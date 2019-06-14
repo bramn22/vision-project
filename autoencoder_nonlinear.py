@@ -8,8 +8,7 @@ class AutoEncoder:
     def __init__(self, input_shape, pcs):
         self.input = Input(shape=input_shape)
 
-        encoder = Reshape((*input_shape, 1))(self.input)  #(256,256,1)
-        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(128,128,8)
+        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(self.input)  #(128,128,8)
         # encoder = MaxPool2D((2, 2), padding='same')(encoder)  #(64,64,8)
 
         encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)
@@ -22,7 +21,7 @@ class AutoEncoder:
         code = Dense(pcs, name='code', activation='linear')(code)  #(pcs)
         self.encoder = Model(inputs=self.input, outputs=code)
 
-        decoder = Dense(4096)(code)  #(65536)
+        decoder = Dense(4096)(code, activation='elu')  #(65536)
         decoder = Reshape((16, 16, 16))(decoder)  #(64,64,16)
         decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)
         decoder = Conv2DTranspose(16, (4, 4), strides=2, activation='elu', padding='same')(decoder)  #(128,128,8)

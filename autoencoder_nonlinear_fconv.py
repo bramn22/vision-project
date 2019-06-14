@@ -8,8 +8,7 @@ class AutoEncoder:
     def __init__(self, input_shape, dks=4):
         self.input = Input(shape=input_shape)
 
-        encoder = Reshape((*input_shape, 1))(self.input)  #(256,256,1)
-        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(128,128,8)
+        encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(self.input)  #(128,128,8)
         encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(128,128,8)
         encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)
         encoder = Conv2D(16, (5, 5), strides=(2, 2), activation='elu', padding='same')(encoder)  #(32,32,8)

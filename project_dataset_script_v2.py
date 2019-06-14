@@ -6,8 +6,7 @@ from skimage.transform import resize
 import pickle
 import utils
 import cv2
-from skimage.color import rgba2rgb
-
+from skimage.color import rgba2rgb, rgb2gray
 
 # parameters that you should set before running this script
 filter = ['aeroplane', 'car', 'chair', 'dog', 'bird']       # select class, this default should yield 1489 training and 1470 validation images
@@ -47,7 +46,7 @@ def build_classification_dataset(list_of_files, gray=False):
 
     return x, y
 
-def build_segmentation_dataset(list_of_files, gray=False):
+def build_segmentation_dataset(list_of_files, gray=False, foreback=False):
     temp = []
     # train_labels = []
     for f_cf in list_of_files:
@@ -71,26 +70,31 @@ def build_segmentation_dataset(list_of_files, gray=False):
     segment_folder = os.path.join(voc_root_folder, "VOC2009/SegmentationClass/")
     segment_filenames = [os.path.join(segment_folder, file) for f in train_filter for file in os.listdir(segment_folder) if
                        f in file]
-    resize_shape = (image_size, image_size, 3)
-    y = np.array([resize(rgba2rgb(io.imread(img_f)), resize_shape) for img_f in segment_filenames]).astype(
-        'float32')
+    if foreback:
+        resize_shape = (image_size, image_size)
+        y = np.array([resize(rgb2gray(rgba2rgb(io.imread(img_f))), resize_shape) for img_f in segment_filenames]).astype(
+            'float32')
+    else:
+        resize_shape = (image_size, image_size, 3)
+        y = np.array([resize(rgba2rgb(io.imread(img_f)), resize_shape) for img_f in segment_filenames]).astype(
+            'float32')
 
     return x, y
 
 ''' ------------------ Classification ------------------ '''
-classes_folder = os.path.join(voc_root_folder, "VOC2009/ImageSets/Main/")
-classes_files = os.listdir(classes_folder)
-train_files = [os.path.join(classes_folder, c_f) for filt in filter for c_f in classes_files if filt in c_f and '_train.txt' in c_f]
-val_files = [os.path.join(classes_folder, c_f) for filt in filter for c_f in classes_files if filt in c_f and '_val.txt' in c_f]
-
-x_train, y_train = build_classification_dataset(train_files, gray=True)
-print('%i training images from %i classes' %(x_train.shape[0], y_train.shape[1]))
-utils.disp_images(x_train[-5:], y_train[-5:], title="disp", cmap='gray')
-
-x_val, y_val = build_classification_dataset(val_files, gray=True)
-print('%i validation images from %i classes' %(x_val.shape[0],  y_train.shape[1]))
-pickle.dump({"x_train": x_train, "y_train": y_train, "x_val": x_val, "y_val": y_val}, open(r"pickles/classification_gray.p", "wb"))
-print('Pickle file saved')
+# classes_folder = os.path.join(voc_root_folder, "VOC2009/ImageSets/Main/")
+# classes_files = os.listdir(classes_folder)
+# train_files = [os.path.join(classes_folder, c_f) for filt in filter for c_f in classes_files if filt in c_f and '_train.txt' in c_f]
+# val_files = [os.path.join(classes_folder, c_f) for filt in filter for c_f in classes_files if filt in c_f and '_val.txt' in c_f]
+#
+# x_train, y_train = build_classification_dataset(train_files, gray=True)
+# print('%i training images from %i classes' %(x_train.shape[0], y_train.shape[1]))
+# utils.disp_images(x_train[-5:], y_train[-5:], title="disp", cmap='gray')
+#
+# x_val, y_val = build_classification_dataset(val_files, gray=True)
+# print('%i validation images from %i classes' %(x_val.shape[0],  y_train.shape[1]))
+# pickle.dump({"x_train": x_train, "y_train": y_train, "x_val": x_val, "y_val": y_val}, open(r"pickles/classification_gray.p", "wb"))
+# print('Pickle file saved')
 
 
 ''' ------------------ Segmentation ------------------ '''
@@ -99,13 +103,13 @@ classes_files = os.listdir(classes_folder)
 train_files = [os.path.join(classes_folder, c_f) for c_f in classes_files if 'train.txt' in c_f]
 val_files = [os.path.join(classes_folder, c_f) for c_f in classes_files if 'val.txt' in c_f]
 
-x_train, y_train = build_segmentation_dataset(train_files)
+x_train, y_train = build_segmentation_dataset(train_files, foreback=True)
 print('{} training images with shapes: {}'.format(x_train.shape[0], x_train.shape))
-utils.disp_images(np.concatenate([x_train[-5:], y_train[-5:]]), title="disp", cols=5)
+# utils.disp_images(np.concatenate([x_train[-5:], y_train[-5:]]), title="disp", cols=5, cmap='gray')
 
-x_val, y_val = build_segmentation_dataset(val_files)
+x_val, y_val = build_segmentation_dataset(val_files, foreback=True)
 print('{} validation images with shapes: {}'.format(x_val.shape[0], y_val.shape))
-pickle.dump({"x_train": x_train, "y_train": y_train, "x_val": x_val, "y_val": y_val}, open(r"pickles/segmentation.p", "wb"))
+pickle.dump({"x_train": x_train, "y_train": y_train, "x_val": x_val, "y_val": y_val}, open(r"pickles/segmentation_foreback.p", "wb"))
 print('Pickle file saved')
 
 
